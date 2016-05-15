@@ -2,15 +2,21 @@ package knhash.mr.sqwamize;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
+import android.text.Selection;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,15 +40,6 @@ public class EditActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mDbHelper = new TheAdapter(this);
@@ -53,6 +50,26 @@ public class EditActivity extends AppCompatActivity {
         mCountText = (TextView) findViewById(R.id.counter);
         notstat = "unset";
 
+        final FloatingActionButton fab_edit = (FloatingActionButton) findViewById(R.id.fab_edit);
+
+
+        fab_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                finish();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                if(!mBodyText.isFocusableInTouchMode()){
+                    mBodyText.setFocusableInTouchMode(true);
+                    mTitleText.setFocusableInTouchMode(true);
+                    fab_edit.hide();
+                    Selection.setSelection(mBodyText.getText(),mBodyText.length());
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(mBodyText, InputMethodManager.SHOW_IMPLICIT);
+                }
+            }
+        });
+
         mRowId = (savedInstanceState == null) ? null :
                 (Long) savedInstanceState.getSerializable(TheAdapter.KEY_ROWID);
         if (mRowId == null) {
@@ -62,6 +79,14 @@ public class EditActivity extends AppCompatActivity {
         }
 
         populateFields();
+
+        if(mTitleText.getText().toString().equals("") || mBodyText.getText().toString().equals("")) {
+            fab_edit.hide();
+            mBodyText.setFocusableInTouchMode(true);
+            mTitleText.setFocusableInTouchMode(true);
+        }
+        else
+            fab_edit.show();
 
         //Prevent Keyboard on start
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -121,28 +146,33 @@ public class EditActivity extends AppCompatActivity {
             if (id > 0) {
                 mRowId = id;
             }
-            return;
+
         }
 
         else if (title.equals("") && !body.equals("")){
-            Toast.makeText(this, "Note titled by InK-PeN", Toast.LENGTH_SHORT).show();
-            String temptitle = "Something amazing";
+            String temptitle = truncate(body, 30);
             long id = mDbHelper.createNote(temptitle, body, count, notstat);
             if (id > 0) {
                 mRowId = id;
             }
-            return;
+
         }
 
         else if (title.equals("") && body.equals("")){
-            Toast.makeText(this, "Note Discarded", Toast.LENGTH_SHORT).show();
-            return;
+            Toast.makeText(this, "Empty note discarded", Toast.LENGTH_SHORT).show();
         }
 
         else {
             mDbHelper.updateNote(mRowId, title, body, count, notstat);
-            return;
         }
+    }
+
+    public String truncate(final String content, final int lastIndex) {
+        String result = content.substring(0, lastIndex);
+        if (content.charAt(lastIndex) != ' ') {
+            result = result.substring(0, result.lastIndexOf(" "));
+        }
+        return result;
     }
 
     @Override
@@ -154,11 +184,16 @@ public class EditActivity extends AppCompatActivity {
 
     @Override
     public  boolean onPrepareOptionsMenu(Menu menu){
-        if(notstat.equals("set")) {
+        if (mTitleText.getText().toString().equals("")) {
+            menu.findItem(R.id.DENOTIFY).setVisible(false);
+            menu.findItem(R.id.NOTIFY).setVisible(false);
+        }
+
+        else if(notstat.equals("set")) {
             menu.findItem(R.id.NOTIFY).setVisible(false);
             menu.findItem(R.id.DENOTIFY).setVisible(true);
         }
-        else {
+        else if(notstat.equals("unset")) {
             menu.findItem(R.id.DENOTIFY).setVisible(false);
             menu.findItem(R.id.NOTIFY).setVisible(true);
         }
@@ -194,11 +229,13 @@ public class EditActivity extends AppCompatActivity {
         }
 
         if (id == R.id.NOTIFY) {
+            saveState();
             notstat = "set";
             notiminder();
         }
 
         if (id == R.id.DENOTIFY) {
+            saveState();
             notstat = "unset";
             notiminder();
         }

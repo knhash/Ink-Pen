@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Sqwamize.iml" filepath="$PROJECT_DIR$/Sqwamize.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Ink-Pen.iml" filepath="$PROJECT_DIR$/Ink-Pen.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

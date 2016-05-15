@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">InK-PeN</string>
+    <string name="app_name">"         InK-PeN"</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_edit">* Write something *</string>
+    <string name="title_activity_edit">InK-PeN</string>
     <string name="action_note">Quick Insert</string>
     <string name="menu_share">Share</string>
     <string name="menu_delete">Delete</string>
