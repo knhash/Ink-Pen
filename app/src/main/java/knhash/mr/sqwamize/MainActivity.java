@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.INSERT_QUICK) {
             //createNote();
             new MaterialDialog.Builder(this)
-                    .title("Write a quick note")
+                    .title("Quick note")
                     .titleGravity(GravityEnum.CENTER)
                     .inputType(InputType.TYPE_CLASS_TEXT)
                     .input("", "", new MaterialDialog.InputCallback() {

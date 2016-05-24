@@ -30,9 +30,8 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:maxLines="1"
-            android:textColor="@android:color/white"
             android:id="@+id/text1"
-            android:gravity="left|center"
+            android:gravity="start|center"
             android:textSize="15sp"
             android:typeface="monospace" />
 
@@ -42,7 +41,7 @@
             android:id="@+id/text3"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
-            android:gravity="center|left"
+            android:gravity="center|start"
             android:textSize="12sp" />
 
     </LinearLayout>
