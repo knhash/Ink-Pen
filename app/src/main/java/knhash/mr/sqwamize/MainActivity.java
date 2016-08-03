@@ -1,6 +1,7 @@
 package knhash.mr.sqwamize;
 
 import android.app.NotificationManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
@@ -20,9 +22,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
-
-import com.afollestad.materialdialogs.GravityEnum;
-import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -104,42 +103,19 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
-        if (id == R.id.INSERT_QUICK) {
-            //createNote();
-            new MaterialDialog.Builder(this)
-                    .title("Quick note")
-                    .titleGravity(GravityEnum.CENTER)
-                    .inputType(InputType.TYPE_CLASS_TEXT)
-                    .input("", "", new MaterialDialog.InputCallback() {
-                        @Override
-                        public void onInput(MaterialDialog dialog, CharSequence input) {
-                            mDbHelper.open();
-                            String title = input.toString();
-                            if (title.equals("")) {
-                                Toast.makeText(MainActivity.this, "Note Discarded", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            Date date = new Date();
-                            String Date= DateFormat.getDateInstance().format(date);
-                            mDbHelper.createNote(title, "", Date, "");
-                            ListView listview = (ListView) findViewById(R.id.list);
-                            fillData(listview);
-                        }
-                    })
-                    .positiveText("Create")
-                    .negativeText("Cancel")
-                    .show();
-            return true;
-        }
-
         if (id == R.id.ABOUT) {
-            new MaterialDialog.Builder(this)
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.about_content)
+                    .setTitle(R.string.about_title);
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            /*new MaterialDialog.Builder(this)
                     .title(R.string.about_title)
                     .content(R.string.about_content)
                     .titleGravity(GravityEnum.CENTER)
                     .contentGravity(GravityEnum.CENTER)
                     .icon(getResources().getDrawable(R.mipmap.ic_launcher))
-                    .show();
+                    .show();*/
             return true;
         }
 

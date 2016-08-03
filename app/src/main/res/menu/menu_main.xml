@@ -9,12 +9,6 @@
         android:orderInCategory="100"
         app:showAsAction="never" />
     <item
-        android:id="@+id/INSERT_QUICK"
-        android:icon="@drawable/fab_ic_add"
-        android:orderInCategory="200"
-        android:title="@string/action_note"
-        app:showAsAction="ifRoom" />
-    <item
         android:id="@+id/BACKUP"
         android:orderInCategory="300"
         android:title="@string/action_backup"
